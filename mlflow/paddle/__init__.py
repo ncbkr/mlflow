@@ -419,12 +419,16 @@ class _PaddleWrapper(object):
             )
         else:
             raise TypeError("Input data should be pandas.DataFrame or numpy.ndarray")
-        inp_data = np.squeeze(inp_data)
+        # inp_data = np.squeeze(inp_data)
 
         self.pd_model.eval()
 
         predicted = self.pd_model(inp_data)
-        return pd.DataFrame(predicted.numpy())
+        # we assume that if input is a DataFrame, output also will be
+        if isinstance(data, pd.DataFrame):
+            return pd.DataFrame(predicted.numpy())
+        else:
+            return predicted.numpy()
 
 
 def _contains_pdparams(path):
